@@ -1,0 +1,42 @@
+import os, http.server, socketserver
+"""
+Creates HTTP server on the local computer.
+The HTTP server contains the Pictures directory and its sub-directories.
+option 5
+"""
+
+class PictureHTTPServer:
+    #initializing the class
+    #os.path.join(os.path.expanduser("~"), "Pictures") return the picture directory of the logged user on all OS
+    def __init__(self, directory= os.path.join(os.path.expanduser("~"), "Pictures"), port=8888):
+        self.directory = directory
+        self.port = port
+        self.http_server_handler = http.server.SimpleHTTPRequestHandler
+
+    def get_directory(self):
+        return self.directory
+    def get_port(self):
+        return self.port
+
+
+    def start_server(self):
+        """
+        Starts the HTTP server on the local computer.
+        """
+        try:
+            # changing the directory to Pictures
+            os.chdir(self.directory)
+            # starts the server
+            with socketserver.TCPServer(("", self.port), self.http_server_handler) as HTTPServer:
+                HTTPServer.serve_forever()
+        except FileNotFoundError:
+            return "Directory not found."
+        except PermissionError:
+            return "Directory not accessible."
+        except OSError as e:
+            return f"Couldn't start server. Error: {e}"
+
+if __name__ == "__main__":
+    #flow
+    my_server = PictureHTTPServer()
+    my_server.start_server()
