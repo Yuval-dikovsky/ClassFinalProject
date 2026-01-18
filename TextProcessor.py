@@ -7,8 +7,8 @@ class TextProcessor:
     # initiating the object
     def __init__(self, file_path):
         self.file_path = file_path
-        # Initializing the internal storage
         self.word_list = []
+        #Reads the file in the init, throws exception if file unreadable
         with open(self.file_path, "r", encoding="utf-8") as file:
             self.raw_text = file.read()
 
@@ -22,15 +22,9 @@ class TextProcessor:
 
     def process_text_to_word_list(self):
         """
-        Extracts the text from the file path.
+        Processes the text and turns it into a list of words
+        Delimiter are white space,comma, -, _, :, ;
+        return the list of words
         """
         self.word_list = re.split(r'[\s,\-_:;]+', self.raw_text.strip().lower())
         return self.word_list
-    # def process_text_to_words(self):
-    #     """
-    #     Takes a string and returns a list of words or None if the result is empty.
-    #     *Space, tab, newline,comma, -, _ , :, ; are treated as delimiters.
-    #     """
-    #     if self.raw_text:
-    #         self.word_list = re.split(r'[\s,\-_:;]+', self.raw_text.strip().lower())
-    #     return self.word_list

@@ -8,7 +8,7 @@ import platform
 
 def network_check():
     """
-    Starts a subprocess to check the network connection by pinging google.com. Sends any output to devnull. Raises exception if ping returns a non-zero exit code.
+    Starts a subprocess to check the network connection by pinging google.com. Sends any output to devnull. Catches exception if ping returns a non-zero exit code.
     returns "Connected" if ping works, "Not Connected" otherwise, "Unexpected error" if the ping command cannot be executed or
     another exception occurs.
     """

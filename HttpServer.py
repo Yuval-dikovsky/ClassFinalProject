@@ -6,8 +6,8 @@ The HTTP server contains the Pictures directory and its sub-directories.
 
 class PictureHTTPServer:
     #initializing the class
-    #os.path.join(os.path.expanduser("~"), "Pictures") return the picture directory of the logged user on all OS
     def __init__(self, port=8888):
+        #os.path.join(os.path.expanduser("~"), "Pictures") return the picture directory of the logged user on all OS
         self.directory = os.path.join(os.path.expanduser("~"), "Pictures")
         self.port = port
         self.http_server_handler = http.server.SimpleHTTPRequestHandler

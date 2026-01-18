@@ -1,14 +1,12 @@
 
-import requests, platform, cpuinfo, psutil, subprocess
+import requests, platform, winreg , psutil, subprocess
 
 """
 Provide the full information about the PC and public IP details
 """
 def ip_details():
     """
-    Gets IP details.
-    return IP details if successful.
-    return Error message if unsuccessful.
+    return IP details: status,message,country,city,isp,org,proxy,hosting,query
     """
     url = "http://ip-api.com/json/?fields=status,message,country,city,isp,org,proxy,hosting,query"
     #Using http get to retrieve from ip-api API with 5 sec timeout so the program won't hang forever
@@ -24,6 +22,7 @@ def get_gpu_model():
     """
     Finds the GPU model based on the specific OS using built in tools in the OS. Works with all gpu vendors.
     return GPU model if successful.
+    In case of exception an error string returns
     """
     try:
         match platform.system().lower():
@@ -49,13 +48,20 @@ def get_gpu_model():
     except Exception as e:
         return f"Error: {e}"
 
+def get_cpu_brand():
+    """
+    returns cpu brand
+    """
+    key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
+                         r"HARDWARE\DESCRIPTION\System\CentralProcessor\0")
+    return winreg.QueryValueEx(key, "ProcessorNameString")[0]
 
 def pc_specs():
     """
     returns pc specs including OS CPU GPU RAM and disk.
     """
     gpu_model = get_gpu_model()
-    cpu_brand = cpuinfo.get_cpu_info().get('brand_raw', "Unknown CPU")
+    cpu_brand = get_cpu_brand()
     ram = psutil.virtual_memory()
     disk = psutil.disk_usage("/")
     return (

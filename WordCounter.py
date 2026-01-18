@@ -13,17 +13,10 @@ class WordCounter(TextProcessor.TextProcessor):
         Counts the number of times a given word exists in a given text file.
         Uses the TextProcessor class to first extract the word, normalize the text and count the number of times it exists.
         returns the number of times it exists.
+        Raises an exception if the target word is not alphabetic.
         """
         if not target_word.isalpha():
             raise ValueError("word must contain only alphabetic characters")
         self.process_text_to_word_list()
         return self.word_list.count(target_word.lower())
-
-if __name__ == "__main__":
-    try:
-        obj =  WordCounter("Empty.txtfsfsf")
-        print(obj.word_stats("tHe"))
-    except Exception as e:
-        print(e)
-
 
