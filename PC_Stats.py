@@ -1,9 +1,8 @@
 
-import requests, platform, cpuinfo, psutil, subprocess, os
+import requests, platform, cpuinfo, psutil, subprocess
 
 """
 Provide the full information about the PC and public IP details
-Option2
 """
 def ip_details():
     """
@@ -12,12 +11,16 @@ def ip_details():
     return Error message if unsuccessful.
     """
     try:
-        url = f"http://ip-api.com/csv/?fields=status,message,country,city,isp,org,proxy,hosting,query"
+        url = "http://ip-api.com/json/?fields=status,message,country,city,isp,org,proxy,hosting,query"
         #Using http get to retrieve from ip-api API with 5 sec timeout so the program won't hang forever
         res = requests.get(url, timeout=5)
-        return f"status,message,country,city,isp,org,proxy,hosting,query\n{res.text}"
+        res_json = res.json()
+        details = ""
+        for key, value in res_json.items():
+            details += f"{key.capitalize()}: {value}\n"
+        return details
     except Exception as e:
-        return f"Unexpectd error: {e}"
+        return f"Error: {e}"
 
 def get_gpu_model():
     """
@@ -69,13 +72,6 @@ def pc_specs():
         f"Free storage: {disk.free // (1024 ** 3)}GB"
     )
 
-
-
-if __name__ == "__main__":
-    #flow
-    print(pc_specs())
-    print("-----------")
-    print(ip_details())
 
 
 

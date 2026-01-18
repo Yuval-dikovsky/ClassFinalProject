@@ -2,7 +2,6 @@ import os, http.server, socketserver
 """
 Creates HTTP server on the local computer.
 The HTTP server contains the Pictures directory and its sub-directories.
-option 5
 """
 
 class PictureHTTPServer:
@@ -29,14 +28,5 @@ class PictureHTTPServer:
             # starts the server
             with socketserver.TCPServer(("", self.port), self.http_server_handler) as HTTPServer:
                 HTTPServer.serve_forever()
-        except FileNotFoundError:
-            return "Directory not found."
-        except PermissionError:
-            return "Directory not accessible."
-        except OSError as e:
-            return f"Couldn't start server. Error: {e}"
-
-if __name__ == "__main__":
-    #flow
-    my_server = PictureHTTPServer()
-    my_server.start_server()
+        except Exception as e:
+            raise RuntimeError(f"HTTP Server failed: {e}")
