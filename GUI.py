@@ -90,11 +90,6 @@ class MenuGUI:
             #displays the top words if there are any
             self.print_output(display)
             #If the file is empty print No top words found and dont print any errors
-            try:
-                if len(top_words.count_words()) == 0:
-                    self.print_output("No top words found")
-            except:
-                return
         except Exception as e:
             self.print_output(f"Unexpected error: {e}")
 
@@ -106,13 +101,17 @@ class MenuGUI:
         try:
             self.print_output("Gathering PC specs and IP details...")
             specs = PC_Stats.pc_specs()
-            ip = PC_Stats.ip_details()
             self.print_output(specs)
+        except Exception:
+            self.print_output("Error: can't get PC specs")
+        try:
             self.print_output("---------------------")
             self.print_output("IP Details:")
+            ip = PC_Stats.ip_details()
             self.print_output(ip)
-        except Exception as e:
-            self.print_output(f"Unexpected error: {e}")
+        except Exception:
+            self.print_output("Error: can't gather IP details")
+
 
     def option3_network_check(self):
         """
@@ -121,8 +120,8 @@ class MenuGUI:
         self.clear_output()
         try:
             self.print_output("Checking network connection...")
-            status = NetworkCheck.network_check()
-            self.print_output(f"Network status: {status}")
+            network_status = NetworkCheck.network_check()
+            self.print_output(f"Network status: {network_status}")
         except Exception as e:
             self.print_output(f"Unexpected error: {e}")
 
@@ -136,25 +135,17 @@ class MenuGUI:
         if not file_path:
             return
         try:
-            word_count = WordCounter.WordCounter(file_path)
+            word_counter = WordCounter.WordCounter(file_path)
             # If the file has error print the error and return
-            if not word_count.extract_text():
-                self.print_output(f"Error checking file: {file_path}")
-                self.print_output(word_count.last_error)
-                return
             # Create a mini window that asks the user for input
             word = simpledialog.askstring("Input", "Enter a Word to count:")
             if not word:
                 return
             self.print_output(f"Counting '{word}' in: {file_path}")
-            #only counts words that contains alphabetic characters
-            if word.isalpha():
-                result = word_count.word_stats(word.lower())
-                self.print_output(f"The word '{word}' exists {result} times.")
-            else:
-                self.print_output("The word you entered does not meet the criteria (must be alphabetic).")
+            result = word_counter.word_stats(word)
+            self.print_output(f"The word '{word}' exists {result} times.")
         except Exception as e:
-            self.print_output(f"Error in Option 4: {e}")
+            self.print_output(f"Error: {e}")
 
     def option5_http_server(self):
         """
@@ -175,8 +166,11 @@ class MenuGUI:
                 self.print_output(f"Server Error: {e}")
         #Creates a thread with a daemon
         #without a daemon the user wont be able to close the program if he clicked on option5
-        HTTP_thread = threading.Thread(target=run_server, daemon=True)
-        HTTP_thread.start()
+        try:
+            HTTP_thread = threading.Thread(target=run_server, daemon=True)
+            HTTP_thread.start()
+        except Exception as e:
+            self.print_output(f"Unexpected error: {e}")
 
 #Runs the program
 if __name__ == "__main__":

@@ -10,17 +10,15 @@ def ip_details():
     return IP details if successful.
     return Error message if unsuccessful.
     """
-    try:
-        url = "http://ip-api.com/json/?fields=status,message,country,city,isp,org,proxy,hosting,query"
-        #Using http get to retrieve from ip-api API with 5 sec timeout so the program won't hang forever
-        res = requests.get(url, timeout=5)
-        res_json = res.json()
-        details = ""
-        for key, value in res_json.items():
-            details += f"{key.capitalize()}: {value}\n"
-        return details
-    except Exception as e:
-        return f"Error: {e}"
+    url = "http://ip-api.com/json/?fields=status,message,country,city,isp,org,proxy,hosting,query"
+    #Using http get to retrieve from ip-api API with 5 sec timeout so the program won't hang forever
+    res = requests.get(url, timeout=5)
+    res_json = res.json()
+    details = ""
+    for key, value in res_json.items():
+        details += f"{key.capitalize()}: {value}\n"
+    return details
+
 
 def get_gpu_model():
     """

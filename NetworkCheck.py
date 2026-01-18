@@ -22,7 +22,5 @@ def network_check():
         return "Connected"
     except subprocess.CalledProcessError:
         return "Not connected"
-    except Exception as e:
-        return f"Unexpected error: {e}"
 
 
